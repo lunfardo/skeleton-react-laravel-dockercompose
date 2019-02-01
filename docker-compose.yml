@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  app-service:
+    build: ./app
+    volumes:
+      - ./app/src/:/var/www/html
+    environment:
+      - HOSTUSER=${USER}
+      - HOSTUSERID=${UID}
+
+  spa-service:
+    build: ./spa
+    volumes:
+      - ./spa/src:/usr/app/src
+
+  webserver-service:
+    build: ./webserver
+    ports:
+      - 80:80
+      
+  db-service:
+    build: ./db
+    user: postgres
+    volumes:
+      - ./db/initdb_ext_scripts:/docker-entrypoint-initdb.d
+      #- ./storage/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
